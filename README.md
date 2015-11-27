@@ -1,18 +1,22 @@
 UAProgressView is a simple and lightweight, yet powerful animated circular progress view.
 
-![UAProgressView](https://github.com/UrbanApps/UAProgressView/blob/master/Screens/UAProgressView.gif?raw=true "Example 1")
+![UAProgressView](https://raw.githubusercontent.com/UrbanApps/UAProgressView/assets/UAProgressView.gif "Example 1")
 
 ## Installation
 
 Installation is made simple with [Cocoapods](http://cocoapods.org/). If you want to do it the old fashioned way, just add `UAProgressView.h` and `UAProgressView.m` into your project.
 
-    pod 'UAProgressView'
+```ruby
+pod 'UAProgressView'
+```
 
 Then, simply place this line in any file that uses UAProgressView.
 
-    #import <UAProgressView.h>
+```objc
+#import <UAProgressView.h>
+```
 
-UAProgressView works on iOS 7 and up.
+UAProgressView works on iOS 6.0 and up.
    
 ## Usage
 
@@ -23,7 +27,7 @@ UAProgressView has sensible defaults to make setup a breeze.
 1. Add a custom view to your storyboard, xib or create a UAProgressView in code.
 2. Set the progress on your UAProgressView by calling `setProgress:`
 
-The progress should be a `float` between 0 and 1, but we will round to the closest if over/under.
+The progress should be a `CGFloat` between 0 and 1, but we will round to the closest if over/under.
 
 The default color used for UAProgressView is the view's `tintColor`, and it will travel up the superview tree as expected to set it.
 
@@ -42,54 +46,72 @@ The `centralView` will be centered in the view but not resized, so plan accordin
 
 There is no central view setup by default.
 
-    @property (nonatomic, strong) UIView *centralView;
+```objc
+@property (nonatomic, strong) UIView *centralView;
+```
+    
 Example usage:
  
-	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60.0, 32.0)];
-	textLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:32];
-	textLabel.textAlignment = NSTextAlignmentCenter;
-	textLabel.textColor = self.progressView.tintColor;
-	textLabel.backgroundColor = [UIColor clearColor];
-	self.progressView.centralView = textLabel;
-
+```objc
+UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 60.0, 32.0)];
+textLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:32];
+textLabel.textAlignment = NSTextAlignmentCenter;
+textLabel.textColor = self.progressView.tintColor;
+textLabel.backgroundColor = [UIColor clearColor];
+self.progressView.centralView = textLabel;
+```
 
 ##### Border Width
 
 Border width is the thickness of the outer circle. It is set to 1.0 by default.
 
-    @property (nonatomic, assign) CGFloat borderWidth;
+```objc
+@property (nonatomic, assign) CGFloat borderWidth;
+```
     
 Example usage:
 
-    self.progressView.borderWidth = 2.0;
+```objc
+self.progressView.borderWidth = 2.0;
+```
     
 ##### Line Width
 
 Line width is the thickness of the inner circle. It is set to 1.0 by default.
 
-    @property (nonatomic, assign) CGFloat lineWidth;
+```objc
+@property (nonatomic, assign) CGFloat lineWidth;
+```
     
 Example usage:
 
-    self.progressView.lineWidth = 2.0;
+```objc
+self.progressView.lineWidth = 2.0;
+```
 
 
 ##### Selection Indication
 
 When `fillOnTouch` is enabled (default is `YES`), UAProgressView will immediately fill the view with the `tintColor`. If the touch is then removed (ie: selected) the fill will fade out, similar to the iOS 7 phone app.
 
-    @property (nonatomic, assign) BOOL fillOnTouch;
+```objc
+@property (nonatomic, assign) BOOL fillOnTouch;
+```
 
 Example usage:
 
-    self.progressView.fillOnTouch = YES;
+```objc
+self.progressView.fillOnTouch = YES;
+```
     
 
 #### Animation Duration
 
 The duration over which to animate the progress set. Default is 0.3 seconds. animationDuration < 0 is ignored.
 
-    @property (nonatomic, assign) CFTimeInterval animationDuration;
+```objc
+@property (nonatomic, assign) CFTimeInterval animationDuration;
+```
 
 The `animationDuration` variable is only used when calling `setProgress:animated:` with `YES`.
 
@@ -102,51 +124,62 @@ The `animationDuration` variable is only used when calling `setProgress:animated
 
 You can set a block to be called when there was a `touchUpInside` on the progress view.
 
-    @property (nonatomic, copy) void (^didSelectBlock)(UAProgressView *progressView);
+```objc
+@property (nonatomic, copy) void (^didSelectBlock)(UAProgressView *progressView);
+```
 
 Example usage:
 
-    self.progressView.didSelectBlock = ^(UAProgressView *progressView){
-		AudioServicesPlaySystemSound(_horn);
-	};
+```objc
+self.progressView.didSelectBlock = ^(UAProgressView *progressView){
+    AudioServicesPlaySystemSound(_horn);
+};
+```
 
 
 ##### On Progress Change
 
 You can set a block to be called whenever the progress is changed. This can be useful if the object updating the progress does not know about the central view.
 
-    @property (nonatomic, copy) void (^progressChangedBlock)(UAProgressView *progressView, float progress);
+```objc
+@property (nonatomic, copy) void (^progressChangedBlock)(UAProgressView *progressView, CGFloat progress);
+```
 
 Example usage:
 
-    self.progressView.progressChangedBlock = ^(UAProgressView *progressView, float progress){
-		[(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f%%", progress * 100]];
-	};
+```objc
+self.progressView.progressChangedBlock = ^(UAProgressView *progressView, CGFloat progress){
+    [(UILabel *)progressView.centralView setText:[NSString stringWithFormat:@"%2.0f%%", progress * 100]];
+};
+```
 
 
 ##### On Fill Change
 
 You can set a block to be called whenever the fill color is changed in your progress view. This is useful to invert colors on the central view, or do other visual updates when the progress view is filled.
 
-    @property (nonatomic, copy) void (^fillChangedBlock)(UAProgressView *progressView, BOOL filled, BOOL animated);
+```objc
+@property (nonatomic, copy) void (^fillChangedBlock)(UAProgressView *progressView, BOOL filled, BOOL animated);
+```
 
 Example usage:
 
-    self.progressView.fillChangedBlock = ^(UAProgressView *progressView, BOOL filled, BOOL animated){
-		UIColor *color = (filled ? [UIColor whiteColor] : progressView.tintColor);
-		if (animated) {
-			[UIView animateWithDuration:0.3 animations:^{
-				[(UILabel *)progressView.centralView setTextColor:color];
-			}];
-		} else {
-			[(UILabel *)progressView.centralView setTextColor:color];
-		}
-	};
-
+```objc
+self.progressView.fillChangedBlock = ^(UAProgressView *progressView, BOOL filled, BOOL animated){
+    UIColor *color = (filled ? [UIColor whiteColor] : progressView.tintColor);
+    if (animated) {
+        [UIView animateWithDuration:0.3 animations:^{
+            [(UILabel *)progressView.centralView setTextColor:color];
+        }];
+    } else {
+        [(UILabel *)progressView.centralView setTextColor:color];
+    }
+};
+```
 
 ### Configuration/Usage Examples
 
-![UAProgressView](https://github.com/UrbanApps/UAProgressView/blob/master/Screens/UAProgressView2.gif?raw=true "Example 2")
+![UAProgressView](https://raw.githubusercontent.com/UrbanApps/UAProgressView/assets/UAProgressView2.gif "Example 2")
 
 For more information on how to use and setup UAProgressView, please see the example project.
 
@@ -167,6 +200,7 @@ Let us know if you see ways to improve UAProgressView or see something wrong wit
 
 ## Open-Source Urban Apps Projects
 
+- [Armchair](https://github.com/UrbanApps/Armchair) - A simple yet powerful App Review Manager for iOS and OSX (Swift)
 - [UAModalPanel](https://github.com/UrbanApps/UAModalPanel) - An animated modal panel alternative for iOS
 - [UAAppReviewManager](https://github.com/UrbanApps/UAAppReviewManager) - An app review prompting tool for iOS and Mac App Store apps.
 - [UALogger](https://github.com/UrbanApps/UALogger) - A logging utility for Mac/iOS apps
@@ -178,6 +212,4 @@ Let us know if you see ways to improve UAProgressView or see something wrong wit
 If you want to thank us for open-sourcing UAProgressView, you can [buy one of our apps](http://itunes.com/apps/urbanapps?at=11l7j9&ct=github) or even donate something small.
 
 <a href='http://www.pledgie.com/campaigns/21926'><img alt='Click here to lend your support to: Support UAProgressView Development and make a donation at www.pledgie.com !' src='http://www.pledgie.com/campaigns/21926.png?skin_name=chrome' border='0' /></a>
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/coneybeare/uaprogressview/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
